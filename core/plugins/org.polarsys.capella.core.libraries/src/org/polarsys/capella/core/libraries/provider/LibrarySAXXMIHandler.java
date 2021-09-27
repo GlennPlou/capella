@@ -69,6 +69,7 @@ public class LibrarySAXXMIHandler extends SAXXMIHandler {
               diagnosticToIgnore.add(diagnostic);
           }
       }
+      
       xmlResource.getErrors().removeAll(diagnosticToIgnore);
   }
 }
