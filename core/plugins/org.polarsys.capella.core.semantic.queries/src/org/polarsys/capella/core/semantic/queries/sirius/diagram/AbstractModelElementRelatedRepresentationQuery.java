@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2020 THALES GLOBAL SERVICES.
+ * Copyright (c) 2006, 2022 THALES GLOBAL SERVICES.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -13,10 +13,12 @@
 package org.polarsys.capella.core.semantic.queries.sirius.diagram;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import org.eclipse.emf.ecore.EObject;
-
+import org.polarsys.capella.common.helpers.query.cache.QueryResultCache;
 import org.polarsys.capella.common.utils.RunnableWithBooleanResult;
 import org.polarsys.capella.core.model.handler.helpers.RepresentationHelper;
 import org.polarsys.capella.common.helpers.query.IQuery;
@@ -24,6 +26,7 @@ import org.polarsys.capella.common.helpers.query.IQuery;
 /**
  */
 public abstract class AbstractModelElementRelatedRepresentationQuery implements IQuery {
+
   /**
    * {@inheritDoc}
    */
@@ -32,7 +35,13 @@ public abstract class AbstractModelElementRelatedRepresentationQuery implements 
     if (!(object_p instanceof EObject)) {
       return result;
     }
-    result.addAll(RepresentationHelper.getAllRepresentationDescriptorsWhereSemanticElementIsDisplayed((EObject) object_p, filterRepresentationDescription()));
+    Map<Object, Collection<Object>> cache = QueryResultCache.getInstance().getCache();
+    if (cache.get(object_p) == null) {
+      result.addAll(RepresentationHelper.getAllRepresentationDescriptorsWhereSemanticElementIsDisplayed((EObject) object_p, filterRepresentationDescription()));
+      cache.put(object_p, result);
+    } else {
+      result.addAll(cache.get(object_p));
+    }
     return result;
   }
 

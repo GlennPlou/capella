@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (c) 2006, 2020 THALES GLOBAL SERVICES.
+ * Copyright (c) 2006, 2022 THALES GLOBAL SERVICES.
  * 
  * This program and the accompanying materials are made available under the
  * terms of the Eclipse Public License 2.0 which is available at
@@ -89,6 +89,7 @@ import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetPage;
 import org.eclipse.ui.views.properties.tabbed.TabbedPropertySheetWidgetFactory;
 import org.polarsys.capella.common.helpers.EObjectLabelProviderHelper;
 import org.polarsys.capella.common.helpers.TransactionHelper;
+import org.polarsys.capella.common.helpers.query.cache.QueryResultCache;
 import org.polarsys.capella.common.tools.report.EmbeddedMessage;
 import org.polarsys.capella.common.tools.report.config.registry.ReportManagerRegistry;
 import org.polarsys.capella.common.tools.report.util.IReportManagerDefaultComponents;
@@ -1117,6 +1118,7 @@ public abstract class SemanticBrowserView extends ViewPart implements ISemanticB
   @Override
   public void refresh(boolean forceRefresh) {
     if (!PlatformUI.getWorkbench().isClosing() && getSite().getPage().isPartVisible(this)) {
+      QueryResultCache.getInstance().getCache().clear();
       // Precondition: do not set the same input twice, except during refreshing.
       TreeViewer currentTreeViewer = getCurrentViewer();
       Object lastInput = currentTreeViewer.getInput();
@@ -1142,6 +1144,7 @@ public abstract class SemanticBrowserView extends ViewPart implements ISemanticB
         // Set focus in another thread UI processing.
         setFocusOnViewer();
       }
+      QueryResultCache.getInstance().getCache().clear();
     }
   }
 
